@@ -20,17 +20,17 @@ export const set_login = (values, onSuccess) => {
       });
   };
 };
-export const set_logout = () => {
+export const set_logout = (onSuccess) => {
   return (dispatch) => {
     userServ
       .userLogOut()
       .then((res) => {
-        message.success("Đăng xuất thành công");
         localServ.remove();
         dispatch({
           type: SET_LOGOUT,
           payload: localServ.get(),
         });
+        onSuccess();
       })
       .catch((err) => {
         message.error("Đăng xuất thất bại");
