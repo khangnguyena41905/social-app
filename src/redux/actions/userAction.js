@@ -3,21 +3,14 @@ import { localServ } from "../../service/local.service";
 import { userServ } from "../../service/user.service";
 import { SET_LOGIN, SET_LOGOUT } from "../constants/userConstant";
 
-export const set_login = (values, onSuccess) => {
+export const set_login = (onSuccess) => {
   return (dispatch) => {
-    userServ
-      .userLogin(values)
-      .then((res) => {
-        localServ.set(res.user);
-        onSuccess();
-        dispatch({
-          type: SET_LOGIN,
-          payload: res.user,
-        });
-      })
-      .catch((err) => {
-        message.error("Đăng nhập thất bại");
-      });
+    onSuccess();
+    localServ.set(userServ.getUserInfor());
+    dispatch({
+      type: SET_LOGIN,
+      payload: userServ.getUserInfor(),
+    });
   };
 };
 export const set_logout = (onSuccess) => {

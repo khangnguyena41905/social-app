@@ -22,4 +22,7 @@ export const userServ = {
   googleLogin: () => {
     return signInWithPopup(auth, provider);
   },
+  getUserInfor: () => {
+    return auth.currentUser;
+  },
 };

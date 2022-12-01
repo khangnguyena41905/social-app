@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import HeaderComponent from "../../Component/HeaderComponent/HeaderComponent";
+import PostComponent from "../../Component/PostsComponent/PostComponent";
 import { localServ } from "../../service/local.service";
 
 export default function HomePage() {
@@ -14,7 +14,12 @@ export default function HomePage() {
   }, []);
   return (
     <div>
-      <HeaderComponent />
+      <div className="fixed w-screen">
+        <HeaderComponent />
+      </div>
+      <div className="pt-20">
+        <PostComponent />
+      </div>
     </div>
   );
 }

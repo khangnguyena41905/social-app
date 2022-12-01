@@ -7,7 +7,7 @@ import { set_logout } from "../../redux/actions/userAction";
 
 export default function UserNav() {
   const userInfor = useSelector((state) => {
-    return state.userReducer.userInfor?.providerData[0];
+    return state.userReducer.userInfor;
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function UserNav() {
   return (
     <>
       {userInfor ? (
-        <div className="flex w-full justify-end items-center whitespace-nowrap">
+        <div className="flex justify-end items-center whitespace-nowrap">
           <span className="mr-2">
             {userInfor.displayName ? userInfor.displayName : "Ai biết ai"}
           </span>

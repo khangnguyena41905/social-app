@@ -13,12 +13,22 @@ import { localServ } from "../../service/local.service";
 export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleSuccess = () => {
+  const handleLoginSuccess = () => {
     message.success("Đăng nhập thành công");
     navigate("/");
   };
+  const handleLoginFalse = () => {
+    message.error("Đăng nhập thất bại");
+  };
   const onFinish = (values) => {
-    dispatch(set_login(values, handleSuccess));
+    userServ
+      .userLogin(values)
+      .then((res) => {
+        dispatch(set_login(handleLoginSuccess));
+      })
+      .catch((err) => {
+        handleLoginFalse();
+      });
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -27,19 +37,13 @@ export default function LoginPage() {
     userServ
       .googleLogin()
       .then((res) => {
-        const user = res.user;
-        console.log("user: ", user);
-        localServ.set(user);
-        dispatch({
-          type: SET_LOGIN,
-          payload: user,
-        });
-        handleSuccess();
+        dispatch(set_login(handleLoginSuccess));
       })
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
+        handleLoginFalse();
       });
   };
   useEffect(() => {
