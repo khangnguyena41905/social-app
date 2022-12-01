@@ -40,11 +40,6 @@ export default function LoginPage() {
         dispatch(set_login(handleLoginSuccess));
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        console.log("errorCode: ", errorCode);
-        const errorMessage = error.message;
-        console.log("errorMessage: ", errorMessage);
         handleLoginFalse();
       });
   };
