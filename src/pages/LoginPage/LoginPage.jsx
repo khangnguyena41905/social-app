@@ -42,7 +42,9 @@ export default function LoginPage() {
       .catch((error) => {
         // Handle Errors here.
         const errorCode = error.code;
+        console.log("errorCode: ", errorCode);
         const errorMessage = error.message;
+        console.log("errorMessage: ", errorMessage);
         handleLoginFalse();
       });
   };
