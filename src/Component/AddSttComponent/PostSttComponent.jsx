@@ -6,10 +6,11 @@ import { statusServ } from "../../service/status.service";
 import { userServ } from "../../service/user.service";
 
 export default function PostSttComponent() {
-  let { uid, photoURL, displayName } = useSelector((state) => {
+  let userInfor = useSelector((state) => {
     return state.userReducer.userInfor;
   });
   const onFinish = ({ content }) => {
+    let { uid, photoURL, displayName } = userInfor;
     let status = {
       uid,
       photoURL,
@@ -49,11 +50,11 @@ export default function PostSttComponent() {
             <span className=" w-8 h-8 border border-rose-600 rounded-full overflow-hidden">
               <img
                 className="w-full h-full object-cover object-center"
-                src={photoURL}
+                src={userInfor?.photoURL}
                 alt=""
               />
             </span>
-            <span className="ml-2 text-lg">{displayName}</span>
+            <span className="ml-2 text-lg">{userInfor?.displayName}</span>
           </div>
         }
         open={isModalOpen}
