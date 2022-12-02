@@ -59,7 +59,7 @@ export default function UserNav() {
       {userInfor ? (
         <div className="flex justify-end items-center whitespace-nowrap">
           <span className="mr-2">
-            {userInfor.displayName ? userInfor.displayName : "Ai biết ai"}
+            {userInfor.displayName ? userInfor.displayName : userInfor.email}
           </span>
           {/* start dropdown */}
           <Dropdown

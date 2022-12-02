@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import login_animation from "../../asset/animations/login_animation.json";
 import { userServ } from "../../service/user.service";
-import { SET_LOGIN } from "../../redux/constants/userConstant";
 import { localServ } from "../../service/local.service";
 
 export default function LoginPage() {
