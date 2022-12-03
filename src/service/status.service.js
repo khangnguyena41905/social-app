@@ -23,7 +23,7 @@ export const statusServ = {
     let q = query(docRef, orderBy("createdAt", "desc"));
     return getDocs(q);
   },
-  post: (status, upload, calbackSuccess, onLoading, offLoading) => {
+  post: (status, upload, onSuccess, onLoading, offLoading) => {
     onLoading();
     const postStt = (status) => {
       addDoc(docRef, {
@@ -31,7 +31,7 @@ export const statusServ = {
         createdAt: Timestamp.now(),
       })
         .then((res) => {
-          calbackSuccess();
+          onSuccess();
           offLoading();
         })
         .catch((err) => {
@@ -55,6 +55,7 @@ export const statusServ = {
             postStt({ ...status, imgList });
           }
         } catch (error) {
+          console.log("error: ", error);
           offLoading();
         }
       });
