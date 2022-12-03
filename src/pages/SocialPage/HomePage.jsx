@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <div>
       <LoadingComponent />
-      <div className="fixed w-screen">
+      <div className="fixed w-screen z-50">
         <HeaderComponent />
       </div>
       <div className="pt-20">

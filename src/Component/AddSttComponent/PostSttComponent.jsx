@@ -1,8 +1,9 @@
-import { Button, Form, Modal } from "antd";
+import { Button, Form, Modal, Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { off_loading, on_loading } from "../../redux/actions/loadingActions";
+import { set_status } from "../../redux/actions/statusActions";
 import { statusServ } from "../../service/status.service";
 
 export default function PostSttComponent() {
@@ -18,20 +19,25 @@ export default function PostSttComponent() {
   displayName = displayName ? displayName : "user??";
   // Modal and form
   const [form] = Form.useForm();
-  const onFinish = ({ content }) => {
-    dispatch(on_loading());
-    statusServ
-      .post({
+  const onFinish = ({ content, upload }) => {
+    const handleSucces = () => {
+      handleOk();
+      dispatch(set_status());
+      form.resetFields();
+    };
+    statusServ.post(
+      {
         uid,
         photoURL,
         displayName,
-        content,
+        content: content ? content : "",
+        imgFolder: upload ? upload[0].uid : null,
         like: 0,
-      })
-      .then(() => {
-        handleOk();
-      });
-    form.resetFields();
+      },
+      upload,
+      handleSucces
+    );
+    console.log("{ content, upload }: ", { content, upload });
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -43,11 +49,60 @@ export default function PostSttComponent() {
   };
   const handleOk = () => {
     setIsModalOpen(false);
-    dispatch(off_loading());
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  // Start Upload function
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const normFile = (e) => {
+    console.log("Upload event:", e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
+
+  const [previewOpenUpload, setPreviewOpenUpload] = useState(false);
+  const [previewImageUpload, setPreviewImageUpload] = useState("");
+  const [previewTitleUpload, setPreviewTitleUpload] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const handleCancelUpload = () => setPreviewOpenUpload(false);
+  const handlePreviewUpload = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImageUpload(file.url || file.preview);
+    setPreviewOpenUpload(true);
+    setPreviewTitleUpload(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  const handleChangeUpload = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div
+        style={{
+          marginTop: 8,
+        }}
+      >
+        Upload
+      </div>
+    </div>
+  );
+
+  // End upload function
+
   return (
     <div>
       <div
@@ -82,6 +137,40 @@ export default function PostSttComponent() {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
+            <Form.Item
+              name="upload"
+              label="Upload"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+            >
+              <Upload
+                action=""
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreviewUpload}
+                onChange={handleChangeUpload}
+                beforeUpload={(file) => {
+                  return false;
+                }}
+              >
+                {fileList.length >= 8 ? null : uploadButton}
+                <Modal
+                  open={previewOpenUpload}
+                  title={previewTitleUpload}
+                  footer={null}
+                  onCancel={handleCancelUpload}
+                >
+                  <img
+                    alt="example"
+                    style={{
+                      width: "100%",
+                    }}
+                    src={previewImageUpload}
+                  />
+                </Modal>
+              </Upload>
+            </Form.Item>
+
             <Form.Item label="Bạn nghĩ gì?" name="content">
               <TextArea rows={4} />
             </Form.Item>

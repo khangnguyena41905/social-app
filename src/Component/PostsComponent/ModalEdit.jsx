@@ -1,6 +1,8 @@
 import { Button, Form, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { set_status } from "../../redux/actions/statusActions";
 import { statusServ } from "../../service/status.service";
 
 export default function ModalEdit({
@@ -9,14 +11,16 @@ export default function ModalEdit({
   handleCloseModal,
   isModalOpen,
 }) {
+  const dispatch = useDispatch();
   const onFinish = (values) => {
     console.log("Success:", values);
-    if (values.content) {
+    if (values.content != content) {
       statusServ
         .update(values, id)
         .then((res) => {
           message.success("update thành công");
           handleCloseModal({ ...isModalOpen, edit: false });
+          dispatch(set_status());
         })
         .catch((err) => {
           message.error("update thất bại");

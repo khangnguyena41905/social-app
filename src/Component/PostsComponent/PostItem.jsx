@@ -4,9 +4,11 @@ import { Dropdown, Modal } from "antd";
 import ModalEdit from "./ModalEdit";
 import ModalDelete from "./ModalDelete";
 import { localServ } from "../../service/local.service";
+import ThumnailItem from "./ThumnailItem";
 
 export default function PostItem({ dataItem }) {
-  let { id, displayName, email, content, photoURL, createdAt, uid } = dataItem;
+  let { id, displayName, email, content, photoURL, createdAt, uid, imgFolder } =
+    dataItem;
   let uidLocal = localServ.get()?.uid;
   const [isModalOpen, setIsModalOpen] = useState({
     edit: false,
@@ -110,8 +112,13 @@ export default function PostItem({ dataItem }) {
         ) : null}
       </div>
       {/* content */}
-      <div className="text-lg text-left pt-5">
-        <p>{content}</p>
+      <div className="w-full pt-5">
+        {/* thumnail */}
+        <div className="w-full">
+          {imgFolder ? <ThumnailItem imgFolder={imgFolder} /> : null}
+        </div>
+        {/* title */}
+        <p className="w-full text-lg text-left">{content}</p>
       </div>
       {/* footer */}
       <div>
