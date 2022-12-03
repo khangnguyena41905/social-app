@@ -9,7 +9,13 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  listAll,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 import { docRef, storage } from "./firebase.config";
 
 export const statusServ = {
@@ -17,38 +23,63 @@ export const statusServ = {
     let q = query(docRef, orderBy("createdAt", "desc"));
     return getDocs(q);
   },
-  post: (status, upload, calbackSuccess) => {
-    const postStt = () => {
+  post: (status, upload, calbackSuccess, onLoading, offLoading) => {
+    onLoading();
+    const postStt = (status) => {
       addDoc(docRef, {
         ...status,
         createdAt: Timestamp.now(),
       })
         .then((res) => {
           calbackSuccess();
+          offLoading();
         })
         .catch((err) => {
           console.log("err: ", err);
+          offLoading();
         });
     };
     if (upload) {
+      let imgList = [];
       upload.forEach(async (file, index) => {
-        await uploadBytes(
-          ref(storage, `${upload[0].uid}/${file.uid}`),
-          file.originFileObj
-        );
-        if (index == upload.length - 1) {
-          postStt();
+        try {
+          await uploadBytes(
+            ref(storage, `${status.uid}/${file.uid}`),
+            file.originFileObj
+          );
+          let url = await getDownloadURL(
+            ref(storage, `${status.uid}/${file.uid}`)
+          );
+          imgList = [...imgList, { name: file.uid, url }];
+          if (index == upload.length - 1) {
+            postStt({ ...status, imgList });
+          }
+        } catch (error) {
+          offLoading();
         }
       });
     } else {
-      postStt();
+      postStt(status);
     }
   },
   update: (status, id) => {
     return updateDoc(doc(docRef, id), { ...status });
   },
-  delete: (id) => {
-    return deleteDoc(doc(docRef, id));
+  delete: (id, uid, imgList, onSuccess, onFalse) => {
+    // delete img on storage
+    if (imgList) {
+      imgList.forEach((item) => {
+        deleteObject(ref(storage, `${uid}/${item.name}`));
+      });
+    }
+    // delete post on firebase document
+    deleteDoc(doc(docRef, id))
+      .then((res) => {
+        onSuccess();
+      })
+      .catch((err) => {
+        onFalse();
+      });
   },
   getPath: async (path) => {
     let folderRef = ref(storage, path);

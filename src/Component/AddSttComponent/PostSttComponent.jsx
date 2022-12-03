@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { set_status } from "../../redux/actions/statusActions";
 import { statusServ } from "../../service/status.service";
+import { off_loading, on_loading } from "../../redux/actions/loadingActions";
 
 export default function PostSttComponent() {
   // Hook
@@ -20,24 +21,26 @@ export default function PostSttComponent() {
   // Modal and form
   const [form] = Form.useForm();
   const onFinish = ({ content, upload }) => {
+    let status = {
+      uid,
+      photoURL,
+      displayName,
+      content: content ? content : "",
+      imgList: [],
+      like: 0,
+    };
+    const onLoading = () => {
+      dispatch(on_loading());
+    };
+    const offLoading = () => {
+      dispatch(off_loading());
+    };
     const handleSucces = () => {
       handleOk();
       dispatch(set_status());
       form.resetFields();
     };
-    statusServ.post(
-      {
-        uid,
-        photoURL,
-        displayName,
-        content: content ? content : "",
-        imgFolder: upload ? upload[0].uid : null,
-        like: 0,
-      },
-      upload,
-      handleSucces
-    );
-    console.log("{ content, upload }: ", { content, upload });
+    statusServ.post(status, upload, handleSucces, onLoading, offLoading);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

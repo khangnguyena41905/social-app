@@ -7,7 +7,7 @@ import { localServ } from "../../service/local.service";
 import ThumnailItem from "./ThumnailItem";
 
 export default function PostItem({ dataItem }) {
-  let { id, displayName, email, content, photoURL, createdAt, uid, imgFolder } =
+  let { id, displayName, email, content, photoURL, createdAt, uid, imgList } =
     dataItem;
   let uidLocal = localServ.get()?.uid;
   const [isModalOpen, setIsModalOpen] = useState({
@@ -106,7 +106,7 @@ export default function PostItem({ dataItem }) {
                 handleCloseModal({ ...isModalOpen, delete: false });
               }}
             >
-              <ModalDelete id={id} />
+              <ModalDelete id={id} imgList={imgList} uid={uid} />
             </Modal>
           </div>
         ) : null}
@@ -115,7 +115,7 @@ export default function PostItem({ dataItem }) {
       <div className="w-full pt-5">
         {/* thumnail */}
         <div className="w-full">
-          {imgFolder ? <ThumnailItem imgFolder={imgFolder} /> : null}
+          {imgList ? <ThumnailItem imgList={imgList} /> : null}
         </div>
         {/* title */}
         <p className="w-full text-lg text-left">{content}</p>

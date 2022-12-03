@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { set_status } from "../../redux/actions/statusActions";
 import { statusServ } from "../../service/status.service";
 
-export default function ModalDelete({ id }) {
+export default function ModalDelete({ id, imgList, uid }) {
   let dispatch = useDispatch();
   return (
     <div className="py-10">
@@ -19,15 +19,14 @@ export default function ModalDelete({ id }) {
       <div>
         <Button
           onClick={() => {
-            statusServ
-              .delete(id)
-              .then((res) => {
-                message.success("Xóa thành công :(((");
-                dispatch(set_status());
-              })
-              .catch((err) => {
-                message.success("Xóa thất bại");
-              });
+            const onSuccess = () => {
+              message.success("Delete success!");
+              dispatch(set_status());
+            };
+            const onFalse = () => {
+              message.error("Delete Fail!");
+            };
+            statusServ.delete(id, uid, imgList, onSuccess, onFalse);
           }}
           type="primary"
           block
