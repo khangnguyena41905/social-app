@@ -93,6 +93,8 @@ export default function PostItem({ dataItem }) {
             >
               <ModalEdit
                 id={id}
+                uid={uid}
+                imgList={imgList}
                 content={content}
                 handleCloseModal={handleCloseModal}
                 isModalOpen={isModalOpen}

@@ -62,8 +62,54 @@ export const statusServ = {
       postStt(status);
     }
   },
-  update: (status, id) => {
-    return updateDoc(doc(docRef, id), { ...status });
+  update: ({ content, upload, imgList }, id, uid, onSuccess, onLoading) => {
+    let i = 0;
+    onLoading();
+    let imgDeletedList = [...imgList];
+    upload.forEach((item) => {
+      imgDeletedList = imgDeletedList.filter((itemDeleted) => {
+        return itemDeleted.name != item.name;
+      });
+    });
+    let imgNewList = [...upload];
+    imgList.forEach((item) => {
+      imgNewList = imgNewList.filter((newItem) => {
+        return newItem.name != item.name;
+      });
+    });
+    // Delete progress
+    if (imgDeletedList) {
+      imgDeletedList.forEach((itemDeleted) => {
+        deleteObject(ref(storage, `${uid}/${itemDeleted.name}`));
+        imgList = imgList.filter((item) => item.uid != itemDeleted.uid);
+        updateDoc(doc(docRef, id), { content, imgList }).then(() => {
+          onSuccess();
+        });
+      });
+      i++;
+    }
+    // Add new img progress and update
+    if (imgNewList) {
+      imgNewList.forEach(async (file, index) => {
+        await uploadBytes(
+          ref(storage, `${uid}/${file.uid}`),
+          file.originFileObj
+        );
+        let url = await getDownloadURL(ref(storage, `${uid}/${file.uid}`));
+        imgList = [...imgList, { name: file.uid, url }];
+        if (index == imgNewList.length - 1) {
+          updateDoc(doc(docRef, id), { content, imgList }).then(() => {
+            onSuccess();
+          });
+        }
+      });
+      i++;
+    }
+    if (i != 0) {
+      updateDoc(doc(docRef, id), { content }).then(() => {
+        onSuccess();
+      });
+    }
   },
   delete: (id, uid, imgList, onSuccess, onFalse) => {
     // delete img on storage
