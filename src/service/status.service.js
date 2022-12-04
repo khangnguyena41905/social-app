@@ -39,10 +39,10 @@ export const statusServ = {
           offLoading();
         });
     };
-    if (upload) {
+    if (upload.length > 0) {
       let imgList = [];
-      upload.forEach(async (file, index) => {
-        try {
+      const postImg = async () => {
+        for (const file of upload) {
           await uploadBytes(
             ref(storage, `${status.uid}/${file.uid}`),
             file.originFileObj
@@ -51,14 +51,10 @@ export const statusServ = {
             ref(storage, `${status.uid}/${file.uid}`)
           );
           imgList = [...imgList, { name: file.uid, url }];
-          if (index == upload.length - 1) {
-            postStt({ ...status, imgList });
-          }
-        } catch (error) {
-          console.log("error: ", error);
-          offLoading();
         }
-      });
+        postStt({ ...status, imgList });
+      };
+      postImg();
     } else {
       postStt(status);
     }
