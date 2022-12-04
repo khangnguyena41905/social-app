@@ -14,6 +14,7 @@ export default function PostItem({ dataItem }) {
     edit: false,
     delete: false,
   });
+
   const showModal = (value) => {
     setIsModalOpen(value);
   };
@@ -68,7 +69,9 @@ export default function PostItem({ dataItem }) {
               alt=""
             />
           </div>
-          <p className="ml-2 text-lg">{displayName ? displayName : email}</p>
+          <p className="ml-2 text-lg font-serif">
+            {displayName ? displayName : email}
+          </p>
         </div>
         {uid == uidLocal ? (
           <div>
@@ -84,7 +87,14 @@ export default function PostItem({ dataItem }) {
             </Dropdown>
             {/* modal edit */}
             <Modal
-              title="Basic Modal"
+              title={
+                <p className="text-2xl">
+                  <span className="mr-2">
+                    <i class="fa fa-pencil-alt"></i>
+                  </span>
+                  Edit status
+                </p>
+              }
               open={isModalOpen.edit}
               footer={false}
               onCancel={() => {
@@ -119,13 +129,30 @@ export default function PostItem({ dataItem }) {
         <div className="w-full">
           {imgList ? <ThumnailItem imgList={imgList} /> : null}
         </div>
+        {/* interact */}
+        <div className="my-2 w-full flex justify-start items-center">
+          <div className="flex justify-between w-1/6 text-gray-300 text-xl">
+            <span className=" cursor-pointer hover:scale-125 transition duration-300">
+              <i class="fa fa-heart"></i>
+            </span>
+            <span className=" cursor-pointer hover:scale-125 transition duration-300">
+              <i class="fa fa-comment-dots"></i>
+            </span>
+            <span className=" cursor-pointer hover:scale-125 transition duration-300">
+              <i class="fa fa-paper-plane"></i>
+            </span>
+          </div>
+        </div>
         {/* title */}
-        <p className="w-full text-lg text-left">{content}</p>
+        <p className="w-full text-sm font-serif text-left text-gray-500">
+          <span className="text-black mr-2 italic">
+            {displayName ? displayName : email}:
+          </span>
+          {content}
+        </p>
       </div>
       {/* footer */}
       <div>
-        {/* interact */}
-        <div></div>
         {/* date time */}
         <div className="text-left text-slate-400 text-sm mt-4 border-t border-slate-300">
           <p>{moment.unix(createdAt.seconds).format("DD/MM/YYYY - HH:MM")}</p>

@@ -88,10 +88,11 @@ export default function ModalEdit({
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
+        layout="vertical"
       >
         <Form.Item
           name="upload"
-          label="Upload"
+          label="Image"
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -125,12 +126,12 @@ export default function ModalEdit({
           </>
         </Form.Item>
 
-        <Form.Item initialValue={content} name="content" label="content">
+        <Form.Item initialValue={content} name="content" label="Content">
           <TextArea rows={4} />
         </Form.Item>
 
         <Form.Item>
-          <Button htmlType="submit" danger>
+          <Button className="float-right" htmlType="submit" danger>
             Update
           </Button>
         </Form.Item>
