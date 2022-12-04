@@ -127,7 +127,7 @@ export default function ModalEdit({
         </Form.Item>
 
         <Form.Item initialValue={content} name="content" label="Content">
-          <TextArea rows={4} />
+          <TextArea rows={4} maxLength={140} />
         </Form.Item>
 
         <Form.Item>

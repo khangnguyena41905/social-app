@@ -172,7 +172,7 @@ export default function PostSttComponent({ userInfor }) {
             </Form.Item>
 
             <Form.Item label="Bạn nghĩ gì?" name="content">
-              <TextArea rows={4} />
+              <TextArea rows={4} maxLength={140} />
             </Form.Item>
 
             <Form.Item>
