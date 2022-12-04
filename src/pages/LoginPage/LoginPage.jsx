@@ -75,7 +75,7 @@ export default function LoginPage() {
           <Lottie style={{ height: "100%" }} animationData={login_animation} />
         </div>
         {/* Login method */}
-        <div>
+        <div className="h-3/5">
           <Form
             layout="vertical"
             name="basic"
@@ -129,12 +129,12 @@ export default function LoginPage() {
             <p>Login with google</p>
           </div>
           {/* Facebook login */}
-          <div className="flex justify-start items-center w-full border-2 border-slate-300 rounded-3xl cursor-pointer hover:shadow-md hover:shadow-slate-300 hover:bg-slate-500 transition duration-300 mt-2">
+          {/* <div className="flex justify-start items-center w-full border-2 border-slate-300 rounded-3xl cursor-pointer hover:shadow-md hover:shadow-slate-300 hover:bg-slate-500 transition duration-300 mt-2">
             <div className="w-1/5 text-4xl text-blue-800">
               <i class="fab fa-facebook-square"></i>
             </div>
             <p>Login with facebook</p>
-          </div>
+          </div> */}
           {/* Sign up */}
           <div className="mt-2">
             <span className="text-lg text-slate-200">
