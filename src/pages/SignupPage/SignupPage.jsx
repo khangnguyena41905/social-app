@@ -10,17 +10,30 @@ import signup_animation from "../../asset/animations/signup_animation.json";
 export default function SignupPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleLoginSuccess = () => {
+    message.success("Login success");
+    navigate("/");
+  };
+  const handleLoginFalse = () => {
+    message.error("Login False");
+  };
+  const loginWithGoogle = () => {
+    userServ
+      .googleLogin()
+      .then((res) => {
+        dispatch(set_login(handleLoginSuccess));
+      })
+      .catch((error) => {
+        handleLoginFalse();
+      });
+  };
+
   const onFinish = (values) => {
-    console.log("Success:", values);
     userServ
       .userSignUp(values)
       .then((res) => {
-        console.log("res: ", res.user);
-        const handleSuccess = () => {
-          navigate("/");
-          message.success("Đăng ký thành công");
-        };
-        dispatch(set_login(values, handleSuccess));
+        dispatch(set_login(handleLoginSuccess));
       })
       .catch((err) => {
         // console.log(err.message);
@@ -47,12 +60,12 @@ export default function SignupPage() {
           borderRadius: "10px",
           border: "1px solid rgba( 255, 255, 255, 0.18 )",
         }}
-        className="flex flex-col h-3/4 w-1/3 px-6"
+        className="flex flex-col h-5/6 w-1/3 px-6"
       >
-        <div className="h-1/2">
-          <div>
-            <h2 className="text-5xl text-teal-500 pt-5">PLZZ , SIGN UP!!!!!</h2>
-          </div>
+        <div>
+          <h2 className="text-5xl text-teal-500 pt-5">PLZZ , SIGN UP!!!!!</h2>
+        </div>
+        <div className="h-2/5">
           <Lottie style={{ height: "100%" }} animationData={signup_animation} />
         </div>
         <div>
@@ -98,6 +111,16 @@ export default function SignupPage() {
               </Button>
             </Form.Item>
           </Form>
+        </div>
+        {/* Google login */}
+        <div
+          onClick={loginWithGoogle}
+          className="flex justify-start items-center w-full border-2 border-slate-300 rounded-3xl cursor-pointer hover:shadow-md hover:shadow-slate-300 hover:bg-slate-500 transition duration-300"
+        >
+          <div className="w-1/5 text-4xl text-green-600">
+            <i class="fab fa-google"></i>
+          </div>
+          <p>Login with google</p>
         </div>
       </div>
     </div>

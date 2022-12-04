@@ -85,32 +85,7 @@ export default function UserNav() {
           </Dropdown>
           {/* end dropdwon */}
         </div>
-      ) : (
-        <div className="w-full flex justify-evenly items-center">
-          <div className="flex w-1/3 ">
-            <Button
-              onClick={() => {
-                navigate("/signup");
-              }}
-              type="primary"
-              danger
-            >
-              Sign up
-            </Button>
-          </div>
-          <div className="w-1/3">
-            <Button
-              onClick={() => {
-                navigate("/login");
-              }}
-              type="primary"
-              danger
-            >
-              Login
-            </Button>
-          </div>
-        </div>
-      )}
+      ) : null}
     </>
   );
 }

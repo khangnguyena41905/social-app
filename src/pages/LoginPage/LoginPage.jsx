@@ -13,11 +13,11 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLoginSuccess = () => {
-    message.success("Đăng nhập thành công");
+    message.success("Login success");
     navigate("/");
   };
   const handleLoginFalse = () => {
-    message.error("Đăng nhập thất bại");
+    message.error("Login False");
   };
   const onFinish = (values) => {
     userServ
